@@ -1,31 +1,74 @@
-import { useState } from 'react';
-import { hello15_backend } from 'declarations/hello15_backend';
+import React, { useState } from 'react';
 
-function App() {
-  const [greeting, setGreeting] = useState('');
+const App = () => {
+  // State to store selected candidate and submission message
+  const [selectedCandidate, setSelectedCandidate] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
-  function handleSubmit(event) {
+  // Handle change in radio button
+  const handleVoteChange = (event) => {
+    setSelectedCandidate(event.target.value);
+  };
+
+  // Handle form submission
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const name = event.target.elements.name.value;
-    hello15_backend.greet(name).then((greeting) => {
-      setGreeting(greeting);
-    });
-    return false;
-  }
+    if (selectedCandidate) {
+      setSubmitted(true);
+    } else {
+      alert('Please select a candidate before submitting.');
+    }
+  };
 
   return (
-    <main>
-      <img src="/logo2.svg" alt="DFINITY logo" />
-      <br />
-      <br />
-      <form action="#" onSubmit={handleSubmit}>
-        <label htmlFor="name">Enter your name: &nbsp;</label>
-        <input id="name" alt="Name" type="text" />
-        <button type="submit">Click Me!</button>
-      </form>
-      <section id="greeting">{greeting}</section>
-    </main>
+    <div style={{ textAlign: 'center', marginTop: '50px' }}>
+      <h1>Vote for Your Candidate</h1>
+
+      {/* Display a message after vote submission */}
+      {submitted ? (
+        <h2>Thank you for voting for {selectedCandidate}!</h2>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>
+              <input
+                type="radio"
+                value="Candidate A"
+                checked={selectedCandidate === 'Candidate A'}
+                onChange={handleVoteChange}
+              />
+              Candidate A
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="radio"
+                value="Candidate B"
+                checked={selectedCandidate === 'Candidate B'}
+                onChange={handleVoteChange}
+              />
+              Candidate B
+            </label>
+          </div>
+          <div>
+            <label>
+              <input
+                type="radio"
+                value="Candidate C"
+                checked={selectedCandidate === 'Candidate C'}
+                onChange={handleVoteChange}
+              />
+              Candidate C
+            </label>
+          </div>
+          <button type="submit" style={{ marginTop: '20px' }}>
+            Submit Vote
+          </button>
+        </form>
+      )}
+    </div>
   );
-}
+};
 
 export default App;
